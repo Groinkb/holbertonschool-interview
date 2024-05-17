@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def canUnlockAll(boxes):
     # Nombre total de boîtes
     n = len(boxes)
