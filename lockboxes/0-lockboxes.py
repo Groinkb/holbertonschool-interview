@@ -32,7 +32,7 @@ def canUnlockAll(boxes):
     # Vérifier si toutes les boîtes ont été déverrouillées
     return all(unlocked)
 
-# Exemples d'utilisation :
+# Exemple d'utilisation :
 print(canUnlockAll([[1], [2], [3], []]))  # Doit afficher : True
 print(canUnlockAll([[1, 2], [3], [3], []]))  # Doit afficher : True
 print(canUnlockAll([[1, 2, 3], [], [], []]))  # Doit afficher : True
