@@ -4,7 +4,7 @@ def canUnlockAll(boxes):
     Détermine si toutes les boîtes peuvent être ouvertes à partir de la première boîte (boîte 0).
 
     :param boxes: Liste de listes, où chaque sous-liste contient les clés disponibles dans cette boîte.
-                  Par exemple, boxes[i] contient les clés pour ouvrir d'autress boîtes.
+                  Par exemple, boxes[i] contient les clés pour ouvrir d'autres boîtes.
     :return: True si toutes les boîtes peuvent être ouvertes, sinon False.
     """
     
@@ -32,8 +32,14 @@ def canUnlockAll(boxes):
     # Vérifier si toutes les boîtes ont été déverrouillées
     return all(unlocked)
 
-# Exemple d'utilisation :
-print(canUnlockAll([[1], [2], [3], []]))  # Doit afficher : True
-print(canUnlockAll([[1, 2], [3], [3], []]))  # Doit afficher : True
-print(canUnlockAll([[1, 2, 3], [], [], []]))  # Doit afficher : True
-print(canUnlockAll([[1, 4], [2], [3], [], [0]]))  # Doit afficher : False
+# Exemples d'utilisation :
+test_cases = [
+    [[1], [2], [3], [4], []],  # Expected: True
+    [[1, 2], [3], [3], []],    # Expected: True
+    [[1, 2, 3], [], [], []],   # Expected: True
+    [[1, 4], [2], [3], [], [0]] # Expected: False
+]
+
+# Imprimer les résultats pour chaque cas de test
+for boxes in test_cases:
+    print(canUnlockAll(boxes))  # Doit afficher le résultat attendu pour chaque cas
