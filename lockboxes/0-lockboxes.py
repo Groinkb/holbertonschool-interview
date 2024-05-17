@@ -1,45 +1,30 @@
 #!/usr/bin/python3
+"""
+17/01/2024
+0-lockboxes.py
+BM
+"""
+
+
 def canUnlockAll(boxes):
     """
-    Détermine si toutes les boîtes peuvent être ouvertes à partir de la première boîte (boîte 0).
-
-    :param boxes: Liste de listes, où chaque sous-liste contient les clés disponibles dans cette boîte.
-                  Par exemple, boxes[i] contient les clés pour ouvrir d'autres boîtes.
-    :return: True si toutes les boîtes peuvent être ouvertes, sinon False.
+    Determines if all the boxes can be opened.
+    Args:
+        boxes: List of list
+    Returns:
+        True or false
     """
-    
-    # Nombre total de boîtes
+    if not boxes or not boxes[0]:
+        return False
+
     n = len(boxes)
-    
-    # Une liste pour suivre les boîtes déverrouillées
-    unlocked = [False] * n
-    unlocked[0] = True  # La première boîte est déverrouillée par défaut
-    
-    # Une pile pour gérer les boîtes à explorer (DFS)
-    stack = [0]
-    
-    while stack:
-        # Prendre une boîte de la pile
-        current_box = stack.pop()
-        
-        # Explorer les clés dans la boîte actuelle
-        for key in boxes[current_box]:
-            if key < n and not unlocked[key]:
-                # Si la clé correspond à une boîte valide et non déverrouillée
-                unlocked[key] = True
-                stack.append(key)
-    
-    # Vérifier si toutes les boîtes ont été déverrouillées
-    return all(unlocked)
+    keys = set(boxes[0])
+    opened_boxes = {0}
 
-# Exemples d'utilisation :
-test_cases = [
-    [[1], [2], [3], [4], []],  # Expected: True
-    [[1, 2], [3], [3], []],    # Expected: True
-    [[1, 2, 3], [], [], []],   # Expected: True
-    [[1, 4], [2], [3], [], [0]] # Expected: False
-]
+    while keys:
+        box_number = keys.pop()
+        if box_number < n and box_number not in opened_boxes:
+            opened_boxes.add(box_number)
+            keys.update(boxes[box_number])
 
-# Imprimer les résultats pour chaque cas de test
-for boxes in test_cases:
-    print(canUnlockAll(boxes))  # Doit afficher le résultat attendu pour chaque cas
+    return len(opened_boxes) == n
