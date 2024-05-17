@@ -4,7 +4,7 @@ def canUnlockAll(boxes):
     Détermine si toutes les boîtes peuvent être ouvertes à partir de la première boîte (boîte 0).
 
     :param boxes: Liste de listes, où chaque sous-liste contient les clés disponibles dans cette boîte.
-                  Par exemple, boxes[i] contient les clés pour ouvrir d'autres boîtes.
+                  Par exemple, boxes[i] contient les clés pour ouvrir d'autress boîtes.
     :return: True si toutes les boîtes peuvent être ouvertes, sinon False.
     """
     
