@@ -1,49 +1,59 @@
 #!/usr/bin/python3
+"""
+Implementing N queens problem
+"""
 import sys
 
 
-def is_safe(board, row, col, N):
-    # Check if there's a queen in the same column
+def recurse(board, row):
+    """
+    utility function that positions the queens on the board
+    and uses recursion ("backtracking") to ensure that all the positions
+    taken are valid positions (i.e. non-attacking positions)
+    """
+
+    N = len(board)
+
+    # Exit rercusion condition
+    if row == N:
+        print(board)
+    else:
+        for col in range(N):
+            board[row][1] = col
+            if valid_position(board, row):
+                recurse(board, row + 1)
+
+
+def valid_position(board, row):
+    """
+    function that ensures that a given position on the board is
+    a valid position (i.e. non-attacking position)
+    """
+
     for i in range(row):
-        if board[i] == col or \
-           board[i] == col - row + i or \
-           board[i] == col + row - i:
+        if board[row][1] == board[i][1]:
+            return False
+        # Clear the diagonales
+        if abs(board[row][1] - board[i][1]) == row - i:
             return False
     return True
 
 
-def solve_n_queens(N):
-    if N < 4:
-        print("N must be at least 4")
-        sys.exit(1)
+if __name__ == '__main__':
 
-    def backtrack(queens, row):
-        if row == N:
-            return [queens[:]]
-
-        solutions = []
-        for col in range(N):
-            if is_safe(queens, row, col, N):
-                queens[row] = col
-                solutions.extend(backtrack(queens, row + 1))
-                queens[row] = -1  # Backtrack
-        return solutions
-
-    queens = [-1] * N
-    return backtrack(queens, 0)
-
-
-if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
-        sys.exit(1)
+        exit(1)
 
     try:
         N = int(sys.argv[1])
-    except ValueError:
+    except Exception:
         print("N must be a number")
-        sys.exit(1)
+        exit(1)
 
-    solutions = solve_n_queens(N)
-    for sol in solutions:
-        print([[i, sol[i]] for i in range(N)])
+    if N < 4:
+        print("N must be at least 4")
+        exit(1)
+
+    board = [[row, 0] for row in range(N)]
+    recurse(board, 0)
