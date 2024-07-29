@@ -27,7 +27,7 @@ def recurse(board, row):
 def valid_position(board, row):
     """
     function that ensures that a given position on the board is
-    a valid position (i.e. non-attacking position)
+    a valid posssition (i.e. non-attacking position)
     """
 
     for i in range(row):
