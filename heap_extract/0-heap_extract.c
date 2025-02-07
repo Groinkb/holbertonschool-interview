@@ -4,7 +4,7 @@
 
 /**
  * heapify_down - Restores the Max-Heap property from root down
- * @root: double pointer to the root of the heap
+ * @root: double pointer to the root of the heaps
  */
 void heapify_down(heap_t *root)
 {
