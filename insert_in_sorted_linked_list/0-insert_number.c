@@ -3,51 +3,38 @@
 #include "lists.h"
 
 /**
- * insert_node - inserts a number into a sorted singly linked list
- * @head: pointer to pointer to the head of the list
- * @number: value to be inserted
- * BM
- * Return: the address of the new node, or NULL if it failed
+ * insert_node - inserts a number into a sorted singly linked list.
+ * @head: pointer to pointer of first node of listint_t list
+ * @number: integer to be included in new node
+ * Return: address of the new element or NULL if it fails
  */
 listint_t *insert_node(listint_t **head, int number)
 {
-    listint_t *new_node;
-    listint_t *current_node;
+	listint_t *new;
+	listint_t *current;
 
-    new_node = *head;
-    current_node = *head;
-
-    new_node = malloc(sizeof(listint_t));
-    if (new_node == NULL)
+	new = malloc(sizeof(listint_t));
+	if (new == NULL)
 		return (NULL);
 
-    new_node->n = number;
+	new->n = number;
+	new->next = NULL;
 
-    if (*head == NULL)
-    {
-        *head = new_node;
-        return (new_node);
-    }
+	if (*head == NULL || (*head)->n >= number)
+	{
+		new->next = *head;
+		*head = new;
+		return (new);
+	}
 
-    if (current_node->n > number)
-    {
-        *head = new_node;
-        new_node->next = current_node;
-        return (new_node);
-    }
+	current = *head;
+	while (current->next != NULL && current->next->n < number)
+	{
+		current = current->next;
+	}
 
-    while (current_node->next->n < number)
-    {
-        current_node = current_node->next;
+	new->next = current->next;
+	current->next = new;
 
-        if (current_node->next == NULL)
-        {
-        current_node->next = new_node;
-        new_node->next = NULL;
-        return (new_node);
-        }
-    }
-    new_node->next = current_node->next;
-    current_node->next = new_node;
-    return (new_node);
+	return (new);
 }

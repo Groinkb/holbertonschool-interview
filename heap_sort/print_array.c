@@ -3,7 +3,7 @@
 
 /**
  * print_array - Prints an array of integers
- * bm
+ *
  * @array: The array to be printed
  * @size: Number of elements in @array
  */

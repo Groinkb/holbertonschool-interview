@@ -1,66 +1,64 @@
-#include <stdio.h>
 #include "sort.h"
+#include <stdio.h>
 
 /**
- * heapify - Ensures that the given subtree is a heap
- * BM
- * @array: Array to heapify
- * @size: Size of the array
- * @idx: Index of the subtree root
- * @total_size: Total size of the array
+ * swap - Swaps two integers in an array
+ * @a: First integer
+ * @b: Second integer
  */
-void heapify(int *array, size_t size, size_t idx, size_t total_size)
+void swap(int *a, int *b)
 {
-	size_t largest;
-	size_t left;
-	size_t right;
-	int temp;
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
 
-	largest = idx;
-	left = 2 * idx + 1;
-	right = 2 * idx + 2;
+/**
+ * heapify - Turns a subtree into a max heap
+ * @array: The array
+ * @size: Total size of the array
+ * @root: Index of the root of the subtree
+ * @end: Index of the last element in the heap
+ */
+void heapify(int *array, size_t size, size_t root, size_t end)
+{
+	size_t largest = root;
+	size_t left = 2 * root + 1;
+	size_t right = 2 * root + 2;
 
-	if (left < size && array[left] > array[largest])
+	if (left < end && array[left] > array[largest])
 		largest = left;
 
-	if (right < size && array[right] > array[largest])
+	if (right < end && array[right] > array[largest])
 		largest = right;
 
-	if (largest != idx)
+	if (largest != root)
 	{
-		temp = array[idx];
-		array[idx] = array[largest];
-		array[largest] = temp;
-		print_array(array, total_size);
-		heapify(array, size, largest, total_size);
+		swap(&array[root], &array[largest]);
+		print_array(array, size);
+		heapify(array, size, largest, end);
 	}
 }
 
 /**
- * heap_sort - Sorts an array of integers in ascending order using
- *	Heap sort algorithm
- * @array: Array to sort
+ * heap_sort - Sorts an array of integers using the heap sort algorithm
+ * @array: Array to be sorted
  * @size: Size of the array
  */
 void heap_sort(int *array, size_t size)
 {
-	int temp;
-	int i;
-
-	if (!array || size < 2)
+	if (array == NULL || size < 2)
 		return;
 
-	/* Build max heap */
-	for (i = size / 2 - 1; i >= 0; i--)
+	/* Build the heap */
+	for (size_t i = size / 2 - 1; i < size; --i)
 		heapify(array, size, i, size);
 
-	/* Heap sort */
-	for (i = size - 1; i > 0; i--)
+	/* Extract elements from heap one by one */
+	for (size_t i = size - 1; i > 0; --i)
 	{
-		temp = array[0];
-		array[0] = array[i];
-		array[i] = temp;
+		swap(&array[0], &array[i]);
 		print_array(array, size);
-		heapify(array, i, 0, size);
+		heapify(array, size, 0, i);
 	}
 }

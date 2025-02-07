@@ -3,8 +3,8 @@
 #include "lists.h"
 
 /**
- * check_cycle - check if the linked list has a cycle on it
- * @list: pointer to head of linked list
+ * check_cycle - checks if a singly linked list has a cycle in it
+ * @list: pointer to head of list
  * Return: 0 if there is no cycle, 1 if there is a cycle
  */
 int check_cycle(listint_t *list)
@@ -12,17 +12,15 @@ int check_cycle(listint_t *list)
 	listint_t *slow = list;
 	listint_t *fast = list;
 
-	/* Browse the list with two pointers, one slow and one fast */
-	while (slow && fast && fast->next)
-	{
-		slow = slow->next;	/* One step forward */
-		fast = fast->next->next;	/* Two steps forward */
+	if (list == NULL)
+		return (0);
 
-		/* If the two pointers meet, there is a cycle */
+	while (fast != NULL && fast->next != NULL)
+	{
+		slow = slow->next;
+		fast = fast->next->next;
 		if (slow == fast)
 			return (1);
 	}
-
-	/* If there is no cycle, returns 0 */
 	return (0);
 }

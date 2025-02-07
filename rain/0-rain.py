@@ -1,31 +1,30 @@
 #!/usr/bin/python3
 """
-0_rain
+Given a list of non-negative integers representing the heights of walls with
+unit width 1, as if viewing the cross-section of a relief map, calculate how
+many square units of water will be retained after it rains.
 """
 
 
 def rain(walls):
     if not walls:
-        return (0)
+        return 0
 
     n = len(walls)
-    left_max = [0] * n
-    right_max = [0] * n
+    water_retained = 0
 
-    # Initialize the left maximum array
-    left_max[0] = walls[0]
+    max_left = [0] * n
+    max_right = [0] * n
+
+    max_left[0] = walls[0]
     for i in range(1, n):
-        left_max[i] = max(left_max[i - 1], walls[i])
+        max_left[i] = max(max_left[i - 1], walls[i])
 
-    # Initialize the right maximum array
-    right_max[n - 1] = walls[n - 1]
+    max_right[-1] = walls[-1]
     for i in range(n - 2, -1, -1):
-        right_max[i] = max(right_max[i + 1], walls[i])
+        max_right[i] = max(max_right[i + 1], walls[i])
 
-    # Calculate the trapped water for each position
-    total_water = 0
     for i in range(n):
-        water_at_position = min(left_max[i], right_max[i]) - walls[i]
-        total_water += max(water_at_position, 0)
+        water_retained += min(max_left[i], max_right[i]) - walls[i]
 
-    return (total_water)
+    return water_retained
