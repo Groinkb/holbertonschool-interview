@@ -35,15 +35,13 @@ def canUnlockAll(boxes):
         return False
 
     n = len(boxes)
-    unlocked = {0}  
-    keys_to_try = set(boxes[0]) 
+    unlocked = {0}
+    keys_to_try = set(boxes[0])
 
     while keys_to_try:
         key = keys_to_try.pop()
         if key < n and key not in unlocked:
             unlocked.add(key)
-            
             keys_to_try.update(boxes[key])
 
-    
     return len(unlocked) == n
