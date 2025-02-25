@@ -10,7 +10,7 @@
  *
  * Description: singly linked list node structure
  * for Holberton project
- * en mode tête de noeil ce projet 
+ * en mode tête de noeil ce petit projet est un exercice de programmation
  */
 typedef struct listint_s
 {
