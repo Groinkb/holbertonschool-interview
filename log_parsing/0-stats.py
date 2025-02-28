@@ -4,7 +4,6 @@ Script that reads stdin line by line and computes metrics.
 """
 
 import sys
-import re
 
 
 def print_stats(total_size, status_codes):
@@ -20,46 +19,33 @@ def print_stats(total_size, status_codes):
             print("{}: {}".format(code, status_codes[code]))
 
 
-def main():
-    """Main function to process the logs"""
+try:
     total_size = 0
-    line_count = 0
     status_codes = {
         200: 0, 301: 0, 400: 0, 401: 0,
         403: 0, 404: 0, 405: 0, 500: 0
     }
+    count = 0
 
-    pattern = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - \[\d{4}-\d{2}-\d{2} ' \
-              r'\d{2}:\d{2}:\d{2}\.\d+\] "GET /projects/260 HTTP/1.1" ' \
-              r'(\d{3}) (\d+)$'
-
-    try:
-        for line in sys.stdin:
-            line = line.strip()
-            match = re.match(pattern, line)
-
-            if match:
-                status_code = int(match.group(1))
-                file_size = int(match.group(2))
-
-                # Update metrics
+    for line in sys.stdin:
+        try:
+            parts = line.split()
+            if len(parts) > 2:
+                status_code = int(parts[-2])
+                file_size = int(parts[-1])
+                
                 if status_code in status_codes:
                     status_codes[status_code] += 1
                 total_size += file_size
-                line_count += 1
+                count += 1
 
-                # Print stats every 10 lines
-                if line_count % 10 == 0:
+                if count % 10 == 0:
                     print_stats(total_size, status_codes)
+        except (ValueError, IndexError):
+            pass
 
-        # Print final stats if there are any lines processed
-        if line_count > 0:
-            print_stats(total_size, status_codes)
+    print_stats(total_size, status_codes)
 
-    except KeyboardInterrupt:
-        # Handle CTRL+C
-        print_stats(total_size, status_codes)
-        raise
-
-if __name__ == "__main__":
-    main()
+except KeyboardInterrupt:
+    print_stats(total_size, status_codes)
+    raise
