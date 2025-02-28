@@ -66,7 +66,6 @@ print("Min # of operations to reach {} char: {}".format(n, minOperations(n)))
 
 ## Structure du projet
 minimum_operations/
-│
 ├── 0-minoperations.py - Implémentation de la fonction
 ├── 0-main.py         - Fichier de test
 └── README.md         - Documentation du projet
