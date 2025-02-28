@@ -9,40 +9,47 @@ This script processes log entries from standard input and calculates:
 
 import sys
 
-total_size = 0
-status_codes = {
-    200: 0, 301: 0, 400: 0, 401: 0,
-    403: 0, 404: 0, 405: 0, 500: 0
-}
-count = 0
 
-def print_stats():
+def print_stats(size, codes):
     """Print the statistics"""
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
+    print("File size: {}".format(size))
+    for code in sorted(codes.keys()):
+        if codes[code] > 0:
+            print("{}: {}".format(code, codes[code]))
 
-try:
-    for line in sys.stdin:
-        try:
-            global total_size, count
-            parts = line.split()
-            if len(parts) >= 2:
-                status_code = int(parts[-2])
-                file_size = int(parts[-1])
-                if status_code in status_codes:
-                    status_codes[status_code] += 1
-                    total_size += file_size
-                    count += 1
 
-                if count % 10 == 0:
-                    print_stats()
-        except:
-            continue
+def process_metrics():
+    """Process the input and compute metrics"""
+    size = 0
+    count = 0
+    codes = {
+        200: 0, 301: 0, 400: 0, 401: 0,
+        403: 0, 404: 0, 405: 0, 500: 0
+    }
 
-    print_stats()
+    try:
+        for line in sys.stdin:
+            try:
+                parts = line.split()
+                if len(parts) >= 2:
+                    status_code = int(parts[-2])
+                    file_size = int(parts[-1])
+                    if status_code in codes:
+                        codes[status_code] += 1
+                        size += file_size
+                        count += 1
 
-except KeyboardInterrupt:
-    print_stats()
-    raise
+                    if count % 10 == 0:
+                        print_stats(size, codes)
+            except:
+                continue
+
+        print_stats(size, codes)
+
+    except KeyboardInterrupt:
+        print_stats(size, codes)
+        raise
+
+
+if __name__ == "__main__":
+    process_metrics()
