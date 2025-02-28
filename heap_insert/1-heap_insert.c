@@ -50,14 +50,17 @@ heap_t *heapify_up(heap_t *node)
  */
 heap_t *get_last_parent(size_t size, heap_t *root)
 {
-    size_t mask;
+    size_t pos = (size + 1) / 2;
+    size_t bit;
     heap_t *parent = root;
 
-    for (mask = 1 << ((sizeof(size_t) * 8) - 1); mask > 1; mask >>= 1)
+    for (bit = 1 << (sizeof(size_t) * 4); bit > 1; bit >>= 1)
     {
-        if (size & mask)
+        if (!parent)
+            break;
+        if (pos & bit)
             parent = parent->right;
-        else if (mask > 2)
+        else
             parent = parent->left;
     }
     return (parent);
@@ -84,7 +87,7 @@ heap_t *heap_insert(heap_t **root, int value)
     }
 
     size = binary_tree_size(*root);
-    parent = get_last_parent(size + 1, *root);
+    parent = get_last_parent(size, *root);
 
     new_node = binary_tree_node(parent, value);
     if (!new_node)
