@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Script that reads stdin line by line and computes metrics.
+Script that readss stdin line by line and computes metrics.
 
 This script processes log entries from standard input and calculates:
     - Total file size
