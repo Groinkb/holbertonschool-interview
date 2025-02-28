@@ -27,7 +27,13 @@ def print_stats(total_size, status_codes):
             print("{}: {}".format(code, status_codes[code]))
 
 
-try:
+def process_logs():
+    """
+    Process log entries from stdin and compute metrics.
+
+    Returns:
+        None
+    """
     total_size = 0
     status_codes = {
         200: 0, 301: 0, 400: 0, 401: 0,
@@ -35,25 +41,30 @@ try:
     }
     count = 0
 
-    for line in sys.stdin:
-        try:
-            parts = line.split()
-            if len(parts) > 2:
-                status_code = int(parts[-2])
-                file_size = int(parts[-1])
-                
-                if status_code in status_codes:
-                    status_codes[status_code] += 1
-                total_size += file_size
-                count += 1
+    try:
+        for line in sys.stdin:
+            try:
+                parts = line.split()
+                if len(parts) > 2:
+                    status_code = int(parts[-2])
+                    file_size = int(parts[-1])
+                    
+                    if status_code in status_codes:
+                        status_codes[status_code] += 1
+                    total_size += file_size
+                    count += 1
 
-                if count % 10 == 0:
-                    print_stats(total_size, status_codes)
-        except (ValueError, IndexError):
-            pass
+                    if count % 10 == 0:
+                        print_stats(total_size, status_codes)
+            except (ValueError, IndexError):
+                pass
 
-    print_stats(total_size, status_codes)
+        print_stats(total_size, status_codes)
 
-except KeyboardInterrupt:
-    print_stats(total_size, status_codes)
-    raise
+    except KeyboardInterrupt:
+        print_stats(total_size, status_codes)
+        raise
+
+
+if __name__ == "__main__":
+    process_logs()
