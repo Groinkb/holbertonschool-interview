@@ -14,6 +14,34 @@ size_t binary_tree_size(const binary_tree_t *tree)
 }
 
 /**
+ * find_parent - Trouve le parent pour le nouveau nœud
+ * @root: Racine de l'arbre
+ * @index: Index où insérer le nouveau nœud
+ * Return: Pointeur vers le parent
+ */
+heap_t *find_parent(heap_t *root, size_t index)
+{
+    size_t mask;
+
+    for (mask = 1 << (31); mask > 1; mask >>= 1)
+    {
+        if (index & mask)
+            break;
+    }
+
+    mask >>= 1;
+    while (mask > 0 && root)
+    {
+        if (index & mask)
+            root = root->right;
+        else
+            root = root->left;
+        mask >>= 1;
+    }
+    return (root);
+}
+
+/**
  * heap_insert - Insère une valeur dans un Max Binary Heap
  * @root: Double pointeur vers la racine du tas
  * @value: Valeur à insérer
@@ -21,7 +49,7 @@ size_t binary_tree_size(const binary_tree_t *tree)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new_node, *current;
+    heap_t *new_node, *parent;
     size_t size;
     int temp;
 
@@ -35,39 +63,24 @@ heap_t *heap_insert(heap_t **root, int value)
     }
 
     size = binary_tree_size(*root);
-    new_node = binary_tree_node(NULL, value);
+    parent = find_parent(*root, size);
+
+    new_node = binary_tree_node(parent, value);
     if (!new_node)
         return (NULL);
 
-    current = *root;
-    while (size > 1)
-    {
-        if (size % 2 == 0)
-            current = current->left;
-        else
-            current = current->right;
-        size /= 2;
-    }
-
-    if (!current->left)
-        current->left = new_node;
+    if (!parent->left)
+        parent->left = new_node;
     else
-        current->right = new_node;
-    new_node->parent = current;
+        parent->right = new_node;
 
-    /* Remonter le nœud si nécessaire */
-    current = new_node;
-    while (current->parent && current->n > current->parent->n)
+    while (new_node->parent && new_node->n > new_node->parent->n)
     {
-        temp = current->n;
-        current->n = current->parent->n;
-        current->parent->n = temp;
-        current = current->parent;
+        temp = new_node->n;
+        new_node->n = new_node->parent->n;
+        new_node->parent->n = temp;
+        new_node = new_node->parent;
     }
 
-    /* Si le nœud est remonté jusqu'à la racine, mettre à jour root */
-    if (!current->parent)
-        *root = current;
-
-    return (current);
+    return (new_node);
 }
