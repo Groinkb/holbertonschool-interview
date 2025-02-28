@@ -34,7 +34,7 @@ path >>= 1;
 path = size;
 while (--bits >= 0)
 {
-if ((path >> bits) & 1)
+if ((path >> bits) &1)
 node = node->right;
 else
 node = node->left;
