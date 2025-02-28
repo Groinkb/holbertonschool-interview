@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Script that readss stdin line by line and computes metrics.
+Script that reads stdin line by line and computes metrics.
 
 This script processes log entries from standard input and calculates:
     - Total file size
@@ -27,13 +27,27 @@ def print_stats(total_size, status_codes):
             print("{}: {}".format(code, status_codes[code]))
 
 
-def process_logs():
+def process_line(line):
     """
-    Process log entries from stdin and compute metrics.
+    Process a single line of log input.
+
+    Args:
+        line (str): Input line to process
 
     Returns:
-        None
+        tuple: (status_code, file_size) or None if invalid
     """
+    try:
+        parts = line.split()
+        if len(parts) >= 2:
+            return int(parts[-2]), int(parts[-1])
+    except (ValueError, IndexError):
+        return None
+    return None
+
+
+def main():
+    """Main function to process logs."""
     total_size = 0
     status_codes = {
         200: 0, 301: 0, 400: 0, 401: 0,
@@ -43,28 +57,23 @@ def process_logs():
 
     try:
         for line in sys.stdin:
-            try:
-                parts = line.split()
-                if len(parts) > 2:
-                    status_code = int(parts[-2])
-                    file_size = int(parts[-1])
-                    
-                    if status_code in status_codes:
-                        status_codes[status_code] += 1
+            result = process_line(line.strip())
+            if result:
+                status_code, file_size = result
+                if status_code in status_codes:
+                    status_codes[status_code] += 1
                     total_size += file_size
                     count += 1
 
                     if count % 10 == 0:
                         print_stats(total_size, status_codes)
-            except (ValueError, IndexError):
-                pass
 
         print_stats(total_size, status_codes)
 
     except KeyboardInterrupt:
         print_stats(total_size, status_codes)
-        raise
+        sys.exit(0)
 
 
 if __name__ == "__main__":
-    process_logs()
+    main()
