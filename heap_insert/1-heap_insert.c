@@ -14,6 +14,24 @@ size_t binary_tree_size(const binary_tree_t *tree)
 }
 
 /**
+ * binary_tree_is_perfect - Vérifie si un arbre binaire est parfait
+ * @tree: Pointeur vers la racine de l'arbre
+ * Return: 1 si parfait, 0 sinon
+ */
+int binary_tree_is_perfect(const binary_tree_t *tree)
+{
+    size_t left_size, right_size;
+
+    if (tree == NULL)
+        return (0);
+
+    left_size = binary_tree_size(tree->left);
+    right_size = binary_tree_size(tree->right);
+
+    return (left_size == right_size);
+}
+
+/**
  * heap_insert - Insère une valeur dans un Max Binary Heap
  * @root: Double pointeur vers la racine du tas
  * @value: Valeur à insérer
@@ -22,7 +40,6 @@ size_t binary_tree_size(const binary_tree_t *tree)
 heap_t *heap_insert(heap_t **root, int value)
 {
     heap_t *new_node, *current;
-    size_t size;
 
     if (!root)
         return (NULL);
@@ -33,21 +50,19 @@ heap_t *heap_insert(heap_t **root, int value)
         return (*root);
     }
 
-    size = binary_tree_size(*root);
     current = *root;
-
-    /* Trouver la position d'insertion en utilisant la représentation binaire de size + 1 */
-    size++;
-    for (size >>= 1; size > 0; size >>= 1)
+    while (current)
     {
-        if (size & 1)
+        if (!current->left)
+            break;
+        if (!current->right)
+            break;
+        if (binary_tree_is_perfect(current->left))
             current = current->right;
         else
             current = current->left;
     }
 
-    /* Remonter d'un niveau pour trouver le parent */
-    current = current->parent;
     new_node = binary_tree_node(current, value);
     if (!new_node)
         return (NULL);
@@ -57,7 +72,6 @@ heap_t *heap_insert(heap_t **root, int value)
     else
         current->right = new_node;
 
-    /* Remonter le nœud si nécessaire */
     while (new_node->parent && new_node->n > new_node->parent->n)
     {
         int temp = new_node->n;
