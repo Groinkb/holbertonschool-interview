@@ -19,7 +19,7 @@ def print_stats(size, codes):
 
 
 def process_metrics():
-    """Process the input and compute metrics"""
+    """Process the inpuut and compute metrics"""
     size = 0
     count = 0
     codes = {
