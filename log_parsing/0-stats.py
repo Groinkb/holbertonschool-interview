@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 """
 Script that reads stdin line by line and computes metrics.
+
+This script processes log entries from standard input and calculates:
+    - Total file size
+    - Count of each HTTP status code
 """
 
 import sys
@@ -8,10 +12,14 @@ import sys
 
 def print_stats(total_size, status_codes):
     """
-    Print statistics about the parsed logs
+    Print statistics about the parsed logs.
+
     Args:
-        total_size: Total size of files
-        status_codes: Dictionary with count of status codes
+        total_size (int): Total size of files processed
+        status_codes (dict): Dictionary with count of status codes
+
+    Returns:
+        None
     """
     print("File size: {}".format(total_size))
     for code in sorted(status_codes.keys()):
