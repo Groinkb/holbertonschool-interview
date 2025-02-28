@@ -14,93 +14,53 @@ size_t binary_tree_size(const binary_tree_t *tree)
 }
 
 /**
- * get_parent - Trouve le parent pour le nouveau nœud
- * @root: Pointeur vers la racine
- * @index: Index du nœud actuel
- * Return: Pointeur vers le parent
+ * swap_nodes - Échange les valeurs de deux nœuds
+ * @a: Premier nœud
+ * @b: Second nœud
  */
-heap_t *get_parent(heap_t *root, size_t index)
+void swap_nodes(heap_t *a, heap_t *b)
 {
-    size_t parent_idx;
-    size_t mask;
-
-    /* Trouver le parent en utilisant l'index */
-    for (mask = 1; mask <= index; mask <<= 1)
-        ;
-    mask >>= 2;
-
-    for (parent_idx = index; mask > 0; mask >>= 1)
-        parent_idx = ((index & mask) ? parent_idx | mask : parent_idx & ~mask);
-
-    /* Parcourir l'arbre jusqu'au parent */
-    for (mask = 1; mask <= parent_idx; mask <<= 1)
-        ;
-    mask >>= 2;
-
-    while (mask > 0 && root != NULL)
-    {
-        root = (parent_idx & mask) ? root->right : root->left;
-        mask >>= 1;
-    }
-
-    return (root);
+    int temp = a->n;
+    a->n = b->n;
+    b->n = temp;
 }
 
 /**
- * swap_with_parent - Échange un nœud avec son parent si nécessaire
- * @node: Pointeur vers le nœud à échanger
+ * heapify_up - Fait remonter un nœud pour maintenir la propriété du tas
+ * @node: Nœud à faire remonter
  * Return: Pointeur vers la position finale du nœud
  */
-heap_t *swap_with_parent(heap_t *node)
+heap_t *heapify_up(heap_t *node)
 {
-    heap_t *parent;
-    heap_t *temp_left, *temp_right, *temp_parent;
+    heap_t *current = node;
 
-    while (node->parent && node->n > node->parent->n)
+    while (current->parent && current->n > current->parent->n)
     {
-        parent = node->parent;
-        temp_parent = parent->parent;
-        temp_left = node->left;
-        temp_right = node->right;
-
-        /* Ajuster les liens avec le parent du parent */
-        if (temp_parent)
-        {
-            if (temp_parent->left == parent)
-                temp_parent->left = node;
-            else
-                temp_parent->right = node;
-        }
-
-        /* Échanger les liens entre parent et node */
-        if (parent->left == node)
-        {
-            node->right = parent->right;
-            node->left = parent;
-            if (parent->right)
-                parent->right->parent = node;
-        }
-        else
-        {
-            node->left = parent->left;
-            node->right = parent;
-            if (parent->left)
-                parent->left->parent = node;
-        }
-
-        /* Mettre à jour les liens du parent */
-        parent->parent = node;
-        parent->left = temp_left;
-        parent->right = temp_right;
-        if (temp_left)
-            temp_left->parent = parent;
-        if (temp_right)
-            temp_right->parent = parent;
-
-        /* Mettre à jour le parent du node */
-        node->parent = temp_parent;
+        swap_nodes(current, current->parent);
+        current = current->parent;
     }
-    return (node);
+    return (current);
+}
+
+/**
+ * get_last_parent - Trouve le parent du dernier nœud à insérer
+ * @size: Taille actuelle du tas
+ * @root: Racine du tas
+ * Return: Pointeur vers le parent du prochain nœud
+ */
+heap_t *get_last_parent(size_t size, heap_t *root)
+{
+    size_t mask;
+    heap_t *parent = root;
+
+    for (mask = 1 << ((sizeof(size_t) * 8) - 1); mask > 1; mask >>= 1)
+    {
+        if (size & mask)
+            parent = parent->right;
+        else if (mask > 2)
+            parent = parent->left;
+    }
+    return (parent);
 }
 
 /**
@@ -111,38 +71,29 @@ heap_t *swap_with_parent(heap_t *node)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new_node;
-    heap_t *parent;
+    heap_t *new_node, *parent;
     size_t size;
 
-    /* Si l'arbre est vide, créer la racine */
-    if (*root == NULL)
+    if (!root)
+        return (NULL);
+
+    if (!*root)
     {
         *root = binary_tree_node(NULL, value);
         return (*root);
     }
 
-    /* Calculer la taille de l'arbre */
     size = binary_tree_size(*root);
+    parent = get_last_parent(size + 1, *root);
 
-    /* Trouver le parent du nouveau nœud */
-    parent = get_parent(*root, size);
-
-    /* Créer le nouveau nœud */
     new_node = binary_tree_node(parent, value);
-    if (new_node == NULL)
+    if (!new_node)
         return (NULL);
 
-    /* Attacher le nouveau nœud au parent */
-    if (parent->left == NULL)
+    if (!parent->left)
         parent->left = new_node;
     else
         parent->right = new_node;
 
-    /* Remonter le nœud si nécessaire pour maintenir la propriété du tas */
-    new_node = swap_with_parent(new_node);
-    if (new_node->parent == NULL)
-        *root = new_node;
-
-    return (new_node);
+    return (heapify_up(new_node));
 }
