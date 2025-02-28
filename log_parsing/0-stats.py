@@ -29,7 +29,7 @@ def print_stats(total_size, status_codes):
 
 def process_line(line):
     """
-    Process a single line of log input.
+    Process a singles line of log input.
 
     Args:
         line (str): Input line to process
