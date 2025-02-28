@@ -55,6 +55,7 @@ heap_t *heap_insert(heap_t **root, int value)
         current->right = new_node;
     new_node->parent = current;
 
+    /* Remonter le nœud si nécessaire */
     current = new_node;
     while (current->parent && current->n > current->parent->n)
     {
@@ -64,5 +65,9 @@ heap_t *heap_insert(heap_t **root, int value)
         current = current->parent;
     }
 
-    return (new_node);
+    /* Si le nœud est remonté jusqu'à la racine, mettre à jour root */
+    if (!current->parent)
+        *root = current;
+
+    return (current);
 }
