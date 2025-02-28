@@ -14,29 +14,6 @@ size_t binary_tree_size(const binary_tree_t *tree)
 }
 
 /**
- * get_parent - Trouve le parent pour le nouveau nœud
- * @root: Pointeur vers la racine
- * @idx: Index du nœud à insérer
- * Return: Pointeur vers le parent
- */
-heap_t *get_parent(heap_t *root, size_t idx)
-{
-    size_t mask;
-    heap_t *parent = root;
-
-    for (mask = 1 << (sizeof(size_t) * 4); mask > 2; mask >>= 1)
-    {
-        if (!parent)
-            break;
-        if (idx & mask)
-            parent = parent->right;
-        else
-            parent = parent->left;
-    }
-    return (parent);
-}
-
-/**
  * heap_insert - Insère une valeur dans un Max Binary Heap
  * @root: Double pointeur vers la racine du tas
  * @value: Valeur à insérer
@@ -62,20 +39,14 @@ heap_t *heap_insert(heap_t **root, int value)
     if (!new_node)
         return (NULL);
 
-    if (size == 0)
-    {
-        free(new_node);
-        return (NULL);
-    }
-
     current = *root;
     while (size > 1)
     {
-        if (size & 1)
-            current = current->right;
-        else
+        if (size % 2 == 0)
             current = current->left;
-        size >>= 1;
+        else
+            current = current->right;
+        size /= 2;
     }
 
     if (!current->left)
