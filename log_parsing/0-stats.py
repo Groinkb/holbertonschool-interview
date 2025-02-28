@@ -52,6 +52,10 @@ def main():
                 if line_count % 10 == 0:
                     print_stats(total_size, status_codes)
 
+        # Print final stats if there are any lines processed
+        if line_count > 0:
+            print_stats(total_size, status_codes)
+
     except KeyboardInterrupt:
         # Handle CTRL+C
         print_stats(total_size, status_codes)
