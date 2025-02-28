@@ -14,21 +14,32 @@ size_t binary_tree_size(const binary_tree_t *tree)
 }
 
 /**
- * binary_tree_is_perfect - Vérifie si un arbre binaire est parfait
- * @tree: Pointeur vers la racine de l'arbre
- * Return: 1 si parfait, 0 sinon
+ * get_last_node - Trouve la position du dernier nœud
+ * @root: Pointeur vers la racine
+ * @size: Taille de l'arbre
+ * Return: Pointeur vers le parent du dernier nœud
  */
-int binary_tree_is_perfect(const binary_tree_t *tree)
+heap_t *get_last_node(heap_t *root, size_t size)
 {
-    size_t left_size, right_size;
+    size_t path = size;
+    int bits = 0;
+    heap_t *node = root;
 
-    if (tree == NULL)
-        return (0);
+    while (path > 1)
+    {
+        bits++;
+        path >>= 1;
+    }
 
-    left_size = binary_tree_size(tree->left);
-    right_size = binary_tree_size(tree->right);
-
-    return (left_size == right_size);
+    path = size;
+    while (--bits >= 0)
+    {
+        if ((path >> bits) & 1)
+            node = node->right;
+        else
+            node = node->left;
+    }
+    return (node);
 }
 
 /**
@@ -39,7 +50,8 @@ int binary_tree_is_perfect(const binary_tree_t *tree)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new_node, *current;
+    heap_t *new_node, *parent;
+    size_t size;
 
     if (!root)
         return (NULL);
@@ -50,27 +62,17 @@ heap_t *heap_insert(heap_t **root, int value)
         return (*root);
     }
 
-    current = *root;
-    while (current)
-    {
-        if (!current->left)
-            break;
-        if (!current->right)
-            break;
-        if (binary_tree_is_perfect(current->left))
-            current = current->right;
-        else
-            current = current->left;
-    }
+    size = binary_tree_size(*root);
+    parent = get_last_node(*root, (size + 1) / 2);
 
-    new_node = binary_tree_node(current, value);
+    new_node = binary_tree_node(parent, value);
     if (!new_node)
         return (NULL);
 
-    if (!current->left)
-        current->left = new_node;
+    if (!parent->left)
+        parent->left = new_node;
     else
-        current->right = new_node;
+        parent->right = new_node;
 
     while (new_node->parent && new_node->n > new_node->parent->n)
     {
