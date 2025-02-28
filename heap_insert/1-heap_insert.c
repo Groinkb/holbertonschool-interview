@@ -26,19 +26,19 @@ int bits = 0;
 heap_t *node = root;
 
 while (path > 1)
-    {
+{
 bits++;
 path >>= 1;
-    }
+}
 
 path = size;
 while (--bits >= 0)
-    {
+{
 if ((path >> bits) & 1)
 node = node->right;
 else
 node = node->left;
-    }
+}
 return (node);
 }
 
@@ -57,10 +57,10 @@ if (!root)
 return (NULL);
 
 if (!*root)
-    {
+{
 *root = binary_tree_node(NULL, value);
 return (*root);
-    }
+}
 
 size = binary_tree_size(*root);
 parent = get_last_node(*root, (size + 1) / 2);
@@ -75,13 +75,13 @@ else
 parent->right = new_node;
 
 while (new_node->parent && new_node->n > new_node->parent->n)
-    {
+{
 int temp = new_node->n;
 
 new_node->n = new_node->parent->n;
 new_node->parent->n = temp;
 new_node = new_node->parent;
-    }
+}
 
 return (new_node);
 }
