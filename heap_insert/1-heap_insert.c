@@ -22,29 +22,32 @@ size_t binary_tree_size(const binary_tree_t *tree)
 heap_t *heap_insert(heap_t **root, int value)
 {
     heap_t *new_node, *current;
-    int temp;
+    size_t size;
 
     if (!root)
         return (NULL);
 
-    /* Créer le premier nœud si l'arbre est vide */
     if (!*root)
     {
         *root = binary_tree_node(NULL, value);
         return (*root);
     }
 
-    /* Trouver la position d'insertion */
+    size = binary_tree_size(*root);
     current = *root;
-    while (current->left && current->right)
+
+    /* Trouver la position d'insertion en utilisant la représentation binaire de size + 1 */
+    size++;
+    for (size >>= 1; size > 0; size >>= 1)
     {
-        if (binary_tree_size(current->left) <= binary_tree_size(current->right))
-            current = current->left;
-        else
+        if (size & 1)
             current = current->right;
+        else
+            current = current->left;
     }
 
-    /* Créer et insérer le nouveau nœud */
+    /* Remonter d'un niveau pour trouver le parent */
+    current = current->parent;
     new_node = binary_tree_node(current, value);
     if (!new_node)
         return (NULL);
@@ -55,13 +58,12 @@ heap_t *heap_insert(heap_t **root, int value)
         current->right = new_node;
 
     /* Remonter le nœud si nécessaire */
-    current = new_node;
-    while (current->parent && current->n > current->parent->n)
+    while (new_node->parent && new_node->n > new_node->parent->n)
     {
-        temp = current->n;
-        current->n = current->parent->n;
-        current->parent->n = temp;
-        current = current->parent;
+        int temp = new_node->n;
+        new_node->n = new_node->parent->n;
+        new_node->parent->n = temp;
+        new_node = new_node->parent;
     }
 
     return (new_node);
