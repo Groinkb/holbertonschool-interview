@@ -14,51 +14,21 @@ size_t binary_tree_size(const binary_tree_t *tree)
 }
 
 /**
- * swap_nodes - Échange les valeurs de deux nœuds
- * @a: Premier nœud
- * @b: Second nœud
+ * get_parent - Trouve le parent pour le nouveau nœud
+ * @root: Pointeur vers la racine
+ * @idx: Index du nœud à insérer
+ * Return: Pointeur vers le parent
  */
-void swap_nodes(heap_t *a, heap_t *b)
+heap_t *get_parent(heap_t *root, size_t idx)
 {
-    int temp = a->n;
-    a->n = b->n;
-    b->n = temp;
-}
-
-/**
- * heapify_up - Fait remonter un nœud pour maintenir la propriété du tas
- * @node: Nœud à faire remonter
- * Return: Pointeur vers la position finale du nœud
- */
-heap_t *heapify_up(heap_t *node)
-{
-    heap_t *current = node;
-
-    while (current->parent && current->n > current->parent->n)
-    {
-        swap_nodes(current, current->parent);
-        current = current->parent;
-    }
-    return (current);
-}
-
-/**
- * get_last_parent - Trouve le parent du dernier nœud à insérer
- * @size: Taille actuelle du tas
- * @root: Racine du tas
- * Return: Pointeur vers le parent du prochain nœud
- */
-heap_t *get_last_parent(size_t size, heap_t *root)
-{
-    size_t pos = (size + 1) / 2;
-    size_t bit;
+    size_t mask;
     heap_t *parent = root;
 
-    for (bit = 1 << (sizeof(size_t) * 4); bit > 1; bit >>= 1)
+    for (mask = 1 << (sizeof(size_t) * 4); mask > 2; mask >>= 1)
     {
         if (!parent)
             break;
-        if (pos & bit)
+        if (idx & mask)
             parent = parent->right;
         else
             parent = parent->left;
@@ -74,8 +44,9 @@ heap_t *get_last_parent(size_t size, heap_t *root)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new_node, *parent;
+    heap_t *new_node, *current;
     size_t size;
+    int temp;
 
     if (!root)
         return (NULL);
@@ -87,16 +58,40 @@ heap_t *heap_insert(heap_t **root, int value)
     }
 
     size = binary_tree_size(*root);
-    parent = get_last_parent(size, *root);
-
-    new_node = binary_tree_node(parent, value);
+    new_node = binary_tree_node(NULL, value);
     if (!new_node)
         return (NULL);
 
-    if (!parent->left)
-        parent->left = new_node;
-    else
-        parent->right = new_node;
+    if (size == 0)
+    {
+        free(new_node);
+        return (NULL);
+    }
 
-    return (heapify_up(new_node));
+    current = *root;
+    while (size > 1)
+    {
+        if (size & 1)
+            current = current->right;
+        else
+            current = current->left;
+        size >>= 1;
+    }
+
+    if (!current->left)
+        current->left = new_node;
+    else
+        current->right = new_node;
+    new_node->parent = current;
+
+    current = new_node;
+    while (current->parent && current->n > current->parent->n)
+    {
+        temp = current->n;
+        current->n = current->parent->n;
+        current->parent->n = temp;
+        current = current->parent;
+    }
+
+    return (new_node);
 }
