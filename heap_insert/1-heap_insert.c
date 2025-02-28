@@ -8,9 +8,9 @@
  */
 size_t binary_tree_size(const binary_tree_t *tree)
 {
-    if (tree == NULL)
-        return (0);
-    return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
+if (tree == NULL)
+return (0);
+return (1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
 }
 
 /**
@@ -21,25 +21,25 @@ size_t binary_tree_size(const binary_tree_t *tree)
  */
 heap_t *get_last_node(heap_t *root, size_t size)
 {
-    size_t path = size;
-    int bits = 0;
-    heap_t *node = root;
+size_t path = size;
+int bits = 0;
+heap_t *node = root;
 
-    while (path > 1)
+while (path > 1)
     {
-        bits++;
-        path >>= 1;
+bits++;
+path >>= 1;
     }
 
-    path = size;
-    while (--bits >= 0)
+path = size;
+while (--bits >= 0)
     {
-        if ((path >> bits) & 1)
-            node = node->right;
-        else
-            node = node->left;
+if ((path >> bits) & 1)
+node = node->right;
+else
+node = node->left;
     }
-    return (node);
+return (node);
 }
 
 /**
@@ -50,38 +50,38 @@ heap_t *get_last_node(heap_t *root, size_t size)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-    heap_t *new_node, *parent;
-    size_t size;
+heap_t *new_node, *parent;
+size_t size;
 
-    if (!root)
-        return (NULL);
+if (!root)
+return (NULL);
 
-    if (!*root)
+if (!*root)
     {
-        *root = binary_tree_node(NULL, value);
-        return (*root);
+*root = binary_tree_node(NULL, value);
+return (*root);
     }
 
-    size = binary_tree_size(*root);
-    parent = get_last_node(*root, (size + 1) / 2);
+size = binary_tree_size(*root);
+parent = get_last_node(*root, (size + 1) / 2);
 
-    new_node = binary_tree_node(parent, value);
-    if (!new_node)
-        return (NULL);
+new_node = binary_tree_node(parent, value);
+if (!new_node)
+return (NULL);
 
-    if (!parent->left)
-        parent->left = new_node;
-    else
-        parent->right = new_node;
+if (!parent->left)
+parent->left = new_node;
+else
+parent->right = new_node;
 
-    while (new_node->parent && new_node->n > new_node->parent->n)
+while (new_node->parent && new_node->n > new_node->parent->n)
     {
-        int temp = new_node->n;
+int temp = new_node->n;
 
-        new_node->n = new_node->parent->n;
-        new_node->parent->n = temp;
-        new_node = new_node->parent;
+new_node->n = new_node->parent->n;
+new_node->parent->n = temp;
+new_node = new_node->parent;
     }
 
-    return (new_node);
+return (new_node);
 }
