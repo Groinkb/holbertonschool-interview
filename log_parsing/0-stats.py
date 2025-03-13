@@ -37,30 +37,26 @@ def process_metrics():
                 # Parse the line to extract status code and file size
                 parts = line.split()
                 if len(parts) > 2:
-                    # The status code is the second-to-last element
-                    # The file size is the last element
+                    # Status code and file size extraction
                     try:
                         status_code = parts[-2]
                         file_size = int(parts[-1])
-                        
-                        # Check if this is a valid status code
+                        # Check if valid status code
                         if status_code in codes:
                             codes[status_code] += 1
-                        
                         # Always add the file size
                         size += file_size
                     except (ValueError, IndexError):
-                        # Skip this line if we can't parse the code or size
+                        # Skip invalid lines
                         pass
             except Exception:
-                # Skip any line that causes an exception
+                # Skip problematic lines
                 continue
-            
             # Print stats every 10 lines
             if count % 10 == 0:
                 print_stats(size, codes)
 
-        # Print final stats if the loop ends normally
+        # Print final stats if loop ends normally
         print_stats(size, codes)
 
     except KeyboardInterrupt:
