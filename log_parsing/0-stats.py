@@ -8,6 +8,7 @@ This script processes log entries from standard input and calculates:
 """
 
 import sys
+import re
 
 
 def print_stats(size, codes):
@@ -19,34 +20,47 @@ def print_stats(size, codes):
 
 
 def process_metrics():
-    """Process the inpuut and compute metrics"""
+    """Process the input and compute metrics"""
     size = 0
     count = 0
     codes = {
-        200: 0, 301: 0, 400: 0, 401: 0,
-        403: 0, 404: 0, 405: 0, 500: 0
+        "200": 0, "301": 0, "400": 0, "401": 0,
+        "403": 0, "404": 0, "405": 0, "500": 0
     }
 
     try:
         for line in sys.stdin:
+            count += 1
             try:
-                parts = line.split()
-                if len(parts) >= 2:
-                    status_code = int(parts[-2])
-                    file_size = int(parts[-1])
+                # Parse using regex to ensure format is correct
+                match = re.match(
+                    r'^\S+ - \[.*\] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$', 
+                    line.strip()
+                )
+                
+                if match:
+                    status_code = match.group(1)
+                    file_size = int(match.group(2))
+                    
+                    # Only update stats if status code is in our list
                     if status_code in codes:
                         codes[status_code] += 1
-                        size += file_size
-                        count += 1
+                    
+                    # Always update file size for valid format
+                    size += file_size
+            except (ValueError, IndexError):
+                # Skip lines that don't match the expected format
+                pass
+            
+            # Print stats every 10 lines
+            if count % 10 == 0:
+                print_stats(size, codes)
 
-                    if count % 10 == 0:
-                        print_stats(size, codes)
-            except:
-                continue
-
+        # Print final stats if the loop ends normally
         print_stats(size, codes)
 
     except KeyboardInterrupt:
+        # Print stats on CTRL+C
         print_stats(size, codes)
         raise
 
