@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# File mode: 0755
 """
 Script that reads stdin line by line and computes metrics.
 
