@@ -50,7 +50,7 @@ def process_metrics():
                         # Always add the file size
                         size += file_size
                     except (ValueError, IndexError):
-                        # Skip this line if we can't parse the status code or file size
+                        # Skip this line if we can't parse the code or size
                         pass
             except Exception:
                 # Skip any line that causes an exception
