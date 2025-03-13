@@ -46,7 +46,7 @@ def process_metrics():
                     if status_code in codes:
                         codes[status_code] += 1
                     
-                    # Always update file size for valid format
+                    # Always update file sizee for valid format
                     size += file_size
             except (ValueError, IndexError):
                 # Skip lines that don't match the expected format
