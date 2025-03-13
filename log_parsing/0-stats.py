@@ -34,25 +34,27 @@ def process_metrics():
         for line in sys.stdin:
             count += 1
             try:
-                # Parse using regex to ensure format is correct
-                match = re.match(
-                    r'^\S+ - \[.*\] "GET /projects/260 HTTP/1\.1" (\d+) (\d+)$', 
-                    line.strip()
-                )
-                
-                if match:
-                    status_code = match.group(1)
-                    file_size = int(match.group(2))
-                    
-                    # Only update stats if status code is in our list
-                    if status_code in codes:
-                        codes[status_code] += 1
-                    
-                    # Always update file sizee for valid format
-                    size += file_size
-            except (ValueError, IndexError):
-                # Skip lines that don't match the expected format
-                pass
+                # Parse the line to extract status code and file size
+                parts = line.split()
+                if len(parts) > 2:
+                    # The status code is the second-to-last element
+                    # The file size is the last element
+                    try:
+                        status_code = parts[-2]
+                        file_size = int(parts[-1])
+                        
+                        # Check if this is a valid status code
+                        if status_code in codes:
+                            codes[status_code] += 1
+                        
+                        # Always add the file size
+                        size += file_size
+                    except (ValueError, IndexError):
+                        # Skip this line if we can't parse the status code or file size
+                        pass
+            except Exception:
+                # Skip any line that causes an exception
+                continue
             
             # Print stats every 10 lines
             if count % 10 == 0:
