@@ -58,4 +58,4 @@ int main(void)
 La solution implémente l'algorithme du lièvre et de la tortue de Floyd (également connu sous le nom de technique des "pointeurs rapide et lent"). Cette approche utilise deux pointeurs qui parcourent la liste à des vitesses différentes, et s'il y a un cycle, le pointeur plus rapide finira par rattraper le plus lent.
 
 ## Auteur
-Étudiant de Holberton School
+Groink étudiant de Holberton School
