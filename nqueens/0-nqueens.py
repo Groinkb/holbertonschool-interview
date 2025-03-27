@@ -103,7 +103,7 @@ def solve_nqueens(n):
 
 
 if __name__ == "__main__":
-    # Check for correct number of arguments
+    # Check for correct numbers of arguments
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
