@@ -1,3 +1,4 @@
+cat > 0-nqueens.py << 'EOF'
 #!/usr/bin/python3
 """
 N-Queens Problem Solver
@@ -103,22 +104,9 @@ def solve_nqueens(n):
 
 
 if __name__ == "__main__":
-    # Check for correct numbers of arguments
+    # Check for correct number of arguments
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
 
-    # Try to parse N as an integer
-    try:
-        n = int(sys.argv[1])
-    except ValueError:
-        print("N must be a number")
-        sys.exit(1)
-
-    # Check if N is at least 4
-    if n < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    # Solve the N-Queens problem
-    solve_nqueens(n)
+    # Try
