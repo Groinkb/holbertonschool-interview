@@ -1,5 +1,6 @@
-cat > 0-nqueens.py << 'EOF'
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# File mode: 0755
 """
 N-Queens Problem Solver
 
