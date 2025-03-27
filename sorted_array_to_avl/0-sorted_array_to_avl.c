@@ -39,11 +39,13 @@ avl_t *build_avl(int *array, size_t start, size_t end, avl_t *parent)
     size_t mid;
 
     /* Base case */
-    if (start > end)
+    if (start > end || array == NULL)
         return (NULL);
 
     /* Get the middle element and make it root */
     mid = (start + end) / 2;
+
+    /* Create the node */
     root = create_node(array[mid]);
     if (root == NULL)
         return (NULL);
@@ -51,8 +53,14 @@ avl_t *build_avl(int *array, size_t start, size_t end, avl_t *parent)
     /* Set parent */
     root->parent = parent;
 
-    /* Recursively build left and right subtrees */
-    root->left = build_avl(array, start, mid - 1, root);
+    /* Recursively build left subtree
+     * Be careful with unsigned values when subtracting */
+    if (mid > start)
+        root->left = build_avl(array, start, mid - 1, root);
+    else
+        root->left = NULL;
+
+    /* Recursively build right subtree */
     root->right = build_avl(array, mid + 1, end, root);
 
     return (root);
