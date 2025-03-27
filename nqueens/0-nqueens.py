@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
-# File mode: 0755
 """
 N-Queens Problem Solver
 
@@ -110,4 +108,17 @@ if __name__ == "__main__":
         print("Usage: nqueens N")
         sys.exit(1)
 
-    # Try
+    # Try to parse N as an integer
+    try:
+        n = int(sys.argv[1])
+    except ValueError:
+        print("N must be a number")
+        sys.exit(1)
+
+    # Check if N is at least 4
+    if n < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+
+    # Solve the N-Queens problem
+    solve_nqueens(n)
