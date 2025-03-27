@@ -10,12 +10,12 @@
 int is_empty(int row, int col)
 {
 while (row > 0 && col > 0)
-    {
+{
 if (row % 3 == 1 && col % 3 == 1)
 return (1);
 row /= 3;
 col /= 3;
-    }
+}
 return (0);
 }
 
@@ -37,14 +37,14 @@ size = pow(3, level);
 
     /* Print the Menger Sponge pattern */
 for (row = 0; row < size; row++)
-    {
+{
 for (col = 0; col < size; col++)
-        {
+{
 if (is_empty(row, col))
 putchar(' ');
 else
 putchar('#');
-        }
+}
 putchar('\n');
-    }
+}
 }
