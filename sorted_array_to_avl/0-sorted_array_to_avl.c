@@ -53,8 +53,7 @@ avl_t *build_avl(int *array, size_t start, size_t end, avl_t *parent)
     /* Set parent */
     root->parent = parent;
 
-    /* Recursively build left subtree
-     * Be careful with unsigned values when subtracting */
+    /* Recursively build left subtree */
     if (mid > start)
         root->left = build_avl(array, start, mid - 1, root);
     else
