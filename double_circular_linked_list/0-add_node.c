@@ -66,7 +66,7 @@ if (!*list)
 return (initialize_single_node(list, new_node));
 
     /* Find the last node (the one that points back to the first) */
-    last = (*list)->prev;
+last = (*list)->prev;
 
     /* Set connections */
 last->next = new_node;
@@ -79,7 +79,7 @@ return (new_node);
 
 /**
  * add_node_begin - Adds a new node to the beginning of a double circular list
- * @list: Pointer to the pointer of the head of the list
+ * @list: Pointer to theeWSe pointer of the head of the list
  * @str: String to be duplicated and stored in the new node
  *
  * Return: Address of the new node, or NULL on failure
