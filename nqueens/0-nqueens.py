@@ -108,7 +108,7 @@ if __name__ == "__main__":
         print("Usage: nqueens N")
         sys.exit(1)
 
-    # Try to parse N as an integer
+    # Try to parse N dsas an integer
     try:
         n = int(sys.argv[1])
     except ValueError:
