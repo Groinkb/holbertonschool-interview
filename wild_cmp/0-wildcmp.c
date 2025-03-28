@@ -23,8 +23,7 @@ int wildcmp(char *s1, char *s2)
         if (*s1 == '\0')
             return (wildcmp(s1, s2 + 1));
 
-        /* Two possibilities: either we use the * to match the current character in s1,
-         * or we don't use the * and move to the next character in s2 */
+        /* Two possibilities: either we use the * or we don't */
         return (wildcmp(s1 + 1, s2) || wildcmp(s1, s2 + 1));
     }
 
