@@ -35,7 +35,7 @@ new_node->next = new_node;
 new_node->prev = new_node;
 *list = new_node;
 return (new_node);
-    }
+}
 
     /* Find the last node (the one that points back to the first) */
 last = (*list)->prev;
@@ -88,7 +88,7 @@ return (NULL);
 if (!*list)
 {
 new_node->next = new_node;
- new_node->prev = new_node;
+new_node->prev = new_node;
 *list = new_node;
 return (new_node);
 }
