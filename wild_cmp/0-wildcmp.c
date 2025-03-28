@@ -15,15 +15,15 @@ return (1);
     /* If s2 has a '*' */
 if (*s2 == '*')
 {
-        /* If the next character in s2 is also '*', skip it */
+/* If the next character in s2 is also '*', skip it */
 if (*(s2 + 1) == '*')
 return (wildcmp(s1, s2 + 1));
 
-        /* Skip characters in s1 until a match is found for the rest of s2 */
+/* Skip characters in s1 until a match is found for the rest of s2 */
 if (*s1 == '\0')
 return (wildcmp(s1, s2 + 1));
 
-        /* Two possibilities: either we use the * or we don't */
+/* Two possibilities: either we use the * or we don't */
 return (wildcmp(s1 + 1, s2) || wildcmp(s1, s2 + 1));
 }
 
