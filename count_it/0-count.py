@@ -1,71 +1,52 @@
 #!/usr/bin/python3
-
-
-"""
-A module that queries the  the occurrences of  keywords
-in the titles of hot articles for a given subreddit.
-"""
 import requests
+import re
 
-def count_words(subreddit, word_list, after=None, count_dict=None):
+
+def count_words(subreddit, word_list, after=None, word_count=None):
     """
-    Recursively queries the Reddit API 
-Args:
-subreddit (str): The subreddit to search in.
-        word_list (list): List of keywords to count.
-        after (str, optional): Token 
-        count_dict (dict, optional):  
+    Recursively queries the Reddit API to count occurrences of keywords in the titles of hot posts
+    in the titles of hot articles for a given subreddit
+    in a given subreddit. The function uses pagination to fetch all hot posts.
+
+    Args:
+        subreddit (str): The subreddit to query.
+        word_list (list): A list of keywords to count.
+        after (str, optional): The ID of the next set of posts to fetch. Default is None.
+        word_count (dict, optional): A dictionary to keep track of word counts. Default is None.
+
     Returns:
-        None: Prints the results as per the requirements.
+        None: Prints results directly.
     """
-    # Initialize count_dict on first call
-    if count_dict is None:
-        count_dict = {}
-        # Convert word_list to lowercase and create dictionary with set to 0
+    if word_count is None:
+        word_count = {word.lower(): 0 for word in word_list}
+
+    url = f'https://www.reddit.com/r/{subreddit}/hot.json'
+    params = {'limit': 100, 'after': after}
+    headers = {'User-Agent': 'Mozilla/5.0'}
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        return
+
+    data = response.json()
+    if 'data' not in data or 'children' not in data['data']:
+        return
+
+    for post in data['data']['children']:
+        title = post['data']['title'].lower()
         for word in word_list:
             word_lower = word.lower()
-            if word_lower in count_dict:
-                continue
-            count_dict[word_lower] = 0
-    # Base URL for Reddit API
-    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    # Set user agent to avoid too many requests error
-    headers = {"User-Agent": "linux:0-count:v1.0 (by /u/holbertonschool)"}
-    # Parameters for the API request
-    params = {"limit": 100}
+            word_count[word_lower] += len(re.findall(r'\b' + re.escape(word_lower) + r'\b', title))
+
+    after = data['data'].get('after', None)
     if after:
-        params["after"] = after
-    # Make the request to the Reddit API
-    response = requests.get(url, headers=headers, params=params,
-                             allow_redirects=False)
-    # If the subreddit is invalid , return without printing
-    if response.status_code != 200:
-        return
-    # Parse response data
-    data = response.json().get("data", {})
-    children = data.get("children", [])
-    after = data.get("after")
-    # Process titles of posts and count keywords
-    for child in children:
-        title = child.get("data", {}).get("title", "").lower()
-        # Split title into words
-        words = title.split()
-        # Count occurrences of each keyword in the title
-        for word in words:
-            # Remove any punctuation attached to the word
-            cleaned_word = ''.join(c for c in word if c.isalnum())
-            
-            # Check if the cleaned word is in our word_list
-            for keyword in count_dict:
-                if cleaned_word == keyword:
-                    count_dict[keyword] += 1
-    # If there are more posts a call
-    if after:
-        return count_words(subreddit, word_list, after, count_dict)
+        count_words(subreddit, word_list, after, word_count)
     else:
-        # Printg order by count, then alphabetically
-        sorted_counts = sorted(count_dict.items(), key=lambda x: (-x[1], x[0]))
-        # Print only keywords with counts > 0
-        for keyword, count in sorted_counts:
+        sorted_counts = sorted(word_count.items(), key=lambda x: (-x[1], x[0]))
+        for word, count in sorted_counts:
             if count > 0:
-                print("{}: {}".format(keyword, count))
+                print(f"{word}: {count}")
+
