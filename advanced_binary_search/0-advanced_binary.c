@@ -10,7 +10,7 @@
  */
 void merge(int *array, int *temp, size_t left, size_t mid, size_t right)
 {
-size_t i, j, k;
+size_t i,j,k;
 
   printf("Merging...\n");
   printf("[left]: ");
