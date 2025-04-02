@@ -1,61 +1,114 @@
-#include "search_algos.h"
+#include "sort.h"
 
 /**
- * print_array - Prints an array of integers
- * @array: The array to be printed
- * @left: The left index of the array
- * @right: The right index of the array
+ * merge - Merges two subarrays into one sorted array
+ * @array: Original array
+ * @temp: Temporary array for merging
+ * @left: Start index of left subarray
+ * @mid: End index of left subarray
+ * @right: End index of right subarray
  */
-void print_array(int *array, size_t left, size_t right)
+void merge(int *array, int *temp, size_t left, size_t mid, size_t right)
 {
-size_t i;
-printf("Searching in array: ");
-for (i = left; i <= right; i++)
-{
-printf("%d", array[i]);
-if (i < right)
-printf(", ");
+  size_t i, j, k;
+
+  printf("Merging...\n");
+  printf("[left]: ");
+  for (i = left; i < mid; i++)
+  {
+    if (i > left)
+      printf(", ");
+    printf("%d", array[i]);
+  }
+  printf("\n[right]: ");
+  for (i = mid; i < right; i++)
+  {
+    if (i > mid)
+      printf(", ");
+    printf("%d", array[i]);
+  }
+  printf("\n");
+
+  /* Copy data to temp arrays */
+  for (i = left; i < right; i++)
+    temp[i] = array[i];
+
+  /* Merge the temp arrays back into array[left..right] */
+  i = left; /* Initial index of left subarray */
+  j = mid;  /* Initial index of right subarray */
+  k = left; /* Initial index of merged subarray */
+
+  while (i < mid && j < right)
+  {
+    if (temp[i] <= temp[j])
+      array[k++] = temp[i++];
+    else
+      array[k++] = temp[j++];
+  }
+
+  /* Copy the remaining elements of left subarray, if any */
+  while (i < mid)
+    array[k++] = temp[i++];
+
+  /* Copy the remaining elements of right subarray, if any */
+  while (j < right)
+    array[k++] = temp[j++];
+
+  printf("[Done]: ");
+  for (i = left; i < right; i++)
+  {
+    if (i > left)
+      printf(", ");
+    printf("%d", array[i]);
+  }
+  printf("\n");
 }
-printf("\n");
-}
+
 /**
- * binary_search_recursive - Searches recursively for a value in a sorted
- *                          array of integers using binary search
- * @array: Pointer to the first element of the array to search in
- * @left: Left index of the subarray
- * @right: Right index of the subarray
- * @value: Value to search for
- *
- * Return: Index where value is located, or -1 if not found
+ * merge_sort_recursive - Recursive function to implement merge sort
+ * @array: Array to be sorted
+ * @temp: Temporary array for merging
+ * @left: Start index
+ * @right: End index
  */
-int binary_search_recursive(int *array, size_t left, size_t right, int value)
+void merge_sort_recursive(int *array, int *temp, size_t left, size_t right)
 {
-size_t mid;
-if (left > right)
-return (-1);
-print_array(array, left, right);
-mid = left + (right - left) / 2;
-/* If value found and it's the first occurrence or the leftmost element */
-if ((mid == left || array[mid - 1] < value) && array[mid] == value)
-return (mid);
-/* If mid value >= value, search in the left subarray to find the occurrence */
-if (array[mid] >= value)
-return (binary_search_recursive(array, left, mid, value));
-else
-return (binary_search_recursive(array, mid + 1, right, value));
+  size_t mid;
+
+  if (right - left > 1)
+  {
+    /* Calculate mid ensuring left array is <= right array in size */
+    mid = left + (right - left) / 2;
+
+    /* Sort first and second halves */
+    merge_sort_recursive(array, temp, left, mid);
+    merge_sort_recursive(array, temp, mid, right);
+
+    /* Merge the sorted halves */
+    merge(array, temp, left, mid, right);
+  }
 }
+
 /**
- * advanced_binary - Searches for a value in a sorted array of integers
- *                  Returns the index of the first value in the array
- * @array: Pointer to the first element of the array to search in
- * @size: Number of elements in array
- * @value: Value to search for
- *
- * Return: Index where value is located, or -1 if not found or array is NULL
+ * merge_sort - Sorts an array of integers in ascending order using Merge Sort
+ * @array: Array to be sorted
+ * @size: Size of the array
  */
-int advanced_binary(int *array, size_t size, int value)
+void merge_sort(int *array, size_t size)
 {
-if (array == NULL || size == 0)
-return (-1);
-return (binary_search_recursive(array, 0, size - 1, value));
+  int *temp;
+
+  if (!array || size < 2)
+    return;
+
+  /* Allocate temporary array for merging */
+  temp = malloc(sizeof(int) * size);
+  if (!temp)
+    return;
+
+  /* Call the recursive merge sort function */
+  merge_sort_recursive(array, temp, 0, size);
+
+  /* Free the temporary array */
+  free(temp);
 }
