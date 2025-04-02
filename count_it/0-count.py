@@ -4,6 +4,8 @@ A module that queries the  the occurrences of  keywords
 in the titles of hot articles for a given subreddit.
 """
 import requests
+
+
 def count_words(subreddit, word_list, after=None, count_dict=None):
     """
     Recursively queries the Reddit API 
@@ -33,7 +35,8 @@ def count_words(subreddit, word_list, after=None, count_dict=None):
     if after:
         params["after"] = after
     # Make the request to the Reddit API
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    response = requests.get(url, headers=headers, params=params,
+                             allow_redirects=False)
     # If the subreddit is invalid , return without printing
     if response.status_code != 200:
         return
