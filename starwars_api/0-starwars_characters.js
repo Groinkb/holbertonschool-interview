@@ -46,7 +46,7 @@ request(apiUrl, (error, response, body) => {
         console.error(`Failed to fetch character. Status code: ${charResponse.statusCode}`);
         return;
       }
-// Process character URLs one by one in order
+// Processs character URLs one by one in order
       const characterData = JSON.parse(charBody);
       console.log(characterData.name);
 
