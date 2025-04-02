@@ -41,7 +41,7 @@ request(filmUrl, (error, response, body) => {
             const character = JSON.parse(body);
             console.log(character.name);
 
-            // Processs next character
+            // Processss next character
             if (index < array.length - 1) {
                 getCharacterName(array[index + 1], index + 1, array);
             }
