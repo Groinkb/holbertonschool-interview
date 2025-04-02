@@ -1,57 +1,58 @@
 #!/usr/bin/node
+//// Check if movie ID is provided
+
 const request = require('request');
 
-// Check if movie ID is provided
-if (process.argv.length !== 3) {
-    console.error('Usage: ./0-starwars_characters.js <movie_id>');
+const filmId = process.argv[2];
+if (!filmId) {
+    console.error('Usage: ./0-starwars_characters.js <Film ID>');
     process.exit(1);
 }
 
-const movieId = process.argv[2];
-const filmUrl = `https://swapi-api.hbtn.io/api/films/${movieId}`;
+const apiUrl = `https://swapi-api.hbtn.io/api/films/${filmId}/`;
 
-// Get film data
-request(filmUrl, (error, response, body) => {
+request(apiUrl, (error, response, body) => {
     if (error) {
-        console.error('Error:', error);
+        console.error(error);
         return;
     }
 
     if (response.statusCode !== 200) {
-        console.error('Invalid status code:', response.statusCode);
+        console.error(`Failed to fetch film. Status code: ${response.statusCode}`);
         return;
     }
 
-    const film = JSON.parse(body);
-    const characters = film.characters;
+    const data = JSON.parse(body);
 
-    // Function to fetch and print character name using promises
-    const fetchCharacterName = (url) => {
-        return new Promise((resolve, reject) => {
-            request(url, (error, response, body) => {
-                if (error) reject(error);
-                else if (response.statusCode !== 200) {
-                    reject(new Error(`Status code: ${response.statusCode}`));
-                } else {
-                    const character = JSON.parse(body);
-                    resolve(character.name);
-                }
-            });
+    if (!data.characters) {
+        console.error('Invalid film ID or no characters found.');
+        return;
+    }
+
+    const characterUrls = data.characters;
+
+    const fetchCharacterName = (index) => {
+        if (index >= characterUrls.length) {
+            return;
+        }
+
+        request(characterUrls[index], (charError, charResponse, charBody) => {
+            if (charError) {
+                console.error(charError);
+                return;
+            }
+
+            if (charResponse.statusCode !== 200) {
+                console.error(`Failed to fetch character. Status code: ${charResponse.statusCode}`);
+                return;
+            }
+
+            const characterData = JSON.parse(charBody);
+            console.log(characterData.name);
+
+            fetchCharacterName(index + 1);
         });
     };
 
-    // Process character URLs one by one in order
-    const processCharacters = async (index = 0) => {
-        if (index >= characters.length) return;
-        try {
-            const name = await fetchCharacterName(characters[index]);
-            console.log(name);
-            processCharacters(index + 1);
-        } catch (err) {
-            console.error('Error processing character:', err);
-            processCharacters(index + 1);
-        }
-    };
-
-    processCharacters();
+    fetchCharacterName(0);
 });
