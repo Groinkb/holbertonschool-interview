@@ -76,7 +76,7 @@ if __name__ == "__main__":
         python3 script_name.py programming 'python java javascript'
 
     The script expects at least two arguments:
-    1. subreddit: 
+1. subreddit: 
     2. A space-separated l.
     """
     if len(sys.argv) < 3:
@@ -93,5 +93,5 @@ if __name__ == "__main__":
         subreddit = sys.argv[1]
         word_list = sys.argv[2].split()
         # Start counting words
-        count_words(subreddit,word_list)
-        
+count_words(subreddit,word_list)
+       
