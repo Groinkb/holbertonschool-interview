@@ -1,16 +1,17 @@
 #!/usr/bin/python3
+
+
 """
 A module that queries the  the occurrences of  keywords
 in the titles of hot articles for a given subreddit.
 """
 import requests
 
-
 def count_words(subreddit, word_list, after=None, count_dict=None):
     """
     Recursively queries the Reddit API 
-    Args:
-        subreddit (str): The subreddit to search in.
+Args:
+subreddit (str): The subreddit to search in.
         word_list (list): List of keywords to count.
         after (str, optional): Token 
         count_dict (dict, optional):  
