@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-A module that queries the Reddit API and counts the occurrences of specific keywords
+A module that queries the Reddit API and counts the occurrences of  keywords
 in the titles of hot articles for a given subreddit.
 """
 import requests
@@ -8,13 +8,13 @@ import requests
 
 def count_words(subreddit, word_list, after=None, count_dict=None):
     """
-    Recursively queries the Reddit API and counts occurrences of keywords in post titles.
+    Recursively queries the Reddit API and counts  of in post titles.
 
     Args:
         subreddit (str): The subreddit to search in.
         word_list (list): List of keywords to count.
         after (str, optional): Token for pagination. Defaults to None.
-        count_dict (dict, optional): Dictionary to store keyword counts. Defaults to None.
+        count_dict (dict, optional): Dictionary to store keyword counts. 
 
     Returns:
         None: Prints the results as per the requirements.
@@ -22,7 +22,7 @@ def count_words(subreddit, word_list, after=None, count_dict=None):
     # Initialize count_dict on first call
     if count_dict is None:
         count_dict = {}
-        # Convert word_list to lowercase and create dictionary with counts set to 0
+        # Convert word_list to lowercase and create dictionary with set to 0
         for word in word_list:
             word_lower = word.lower()
             if word_lower in count_dict:
@@ -43,7 +43,7 @@ def count_words(subreddit, word_list, after=None, count_dict=None):
     # Make the request to the Reddit API
     response = requests.get(url, headers=headers, params=params, allow_redirects=False)
 
-    # If the subreddit is invalid (status code other than 200), return without printing
+    # If the subreddit is invalid , return without printing
     if response.status_code != 200:
         return
 
@@ -68,15 +68,14 @@ def count_words(subreddit, word_list, after=None, count_dict=None):
                 if cleaned_word == keyword:
                     count_dict[keyword] += 1
 
-    # If there are more posts (after is not None), make a recursive call
+    # If there are more posts (after is not None), make a call
     if after:
         return count_words(subreddit, word_list, after, count_dict)
     else:
-        # Print results in descending order by count, then alphabetically
+        # Printg order by count, then alphabetically
         sorted_counts = sorted(count_dict.items(), key=lambda x: (-x[1], x[0]))
         
         # Print only keywords with counts > 0
         for keyword, count in sorted_counts:
             if count > 0:
                 print("{}: {}".format(keyword, count))
-                
