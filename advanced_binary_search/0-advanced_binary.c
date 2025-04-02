@@ -45,7 +45,7 @@ mid = left + (right - left) / 2;
 if ((mid == left || array[mid - 1] < value) && array[mid] == value)
 return (mid);
 
-/* If mid value >= value, search in the left subarray to find the leftmost occurrence */
+/* If mid value >= value, search in the left subarray to find the occurrence */
 if (array[mid] >= value)
 return (binary_search_recursive(array, left, mid, value));
 else
