@@ -24,7 +24,7 @@ void sift_down(int *array, size_t start, size_t end, size_t size)
 size_t root = start;
 size_t child, swap_idx;
 
-  while (2 * root + 1 <= end)
+while (2 * root + 1 <= end)
 {
 child = 2 * root + 1;
 swap_idx = root;
