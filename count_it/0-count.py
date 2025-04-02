@@ -93,5 +93,4 @@ if __name__ == "__main__":
         subreddit = sys.argv[1]
         word_list = sys.argv[2].split()
         # Start counting words
-count_words(subreddit,word_list)
-       
+        count_words(subreddit,word_list)
