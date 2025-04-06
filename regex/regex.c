@@ -13,7 +13,7 @@ static int match_helper(char const *str, char const *pattern)
   /* If pattern is empty, string must also be empty */
 if (*pattern == '\0')
 {
-return (*str == '\0');
+return ((*str == '\0'));
 }
 
   /* Look ahead to check if the next character is '*' */
@@ -27,14 +27,14 @@ if (*str != '\0' && (*pattern == '.' || *pattern == *str))
 {
 return match_helper(str + 1, pattern + 1);
 }
-return 0;
+return (0);
 }
 else /* Next char is '*' */
 {
     /* Try matching zero characters (skip the pattern with '*') */
 if (match_helper(str, pattern + 2))
 {
-return 1;
+return (1);
 }
 
     /* Try matching one or more characters */
@@ -44,10 +44,10 @@ while (*str != '\0' && (*pattern == '.' || *pattern == *str))
 str++;
 if (match_helper(str, pattern + 2))
 {
-return 1;
+return (1);
 }
 }
-return 0;
+return (0);
 }
 }
 
@@ -62,7 +62,7 @@ int regex_match(char const *str, char const *pattern)
 {
 if (!str || !pattern)
 {
-return 0; 
+return (0); 
 }
 
 return match_helper(str, pattern);
