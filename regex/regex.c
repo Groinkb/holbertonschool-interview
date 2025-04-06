@@ -25,7 +25,7 @@ if (!is_star)
     /* Current char must match pattern or pattern is '.' and str not empty */
 if (*str != '\0' && (*pattern == '.' || *pattern == *str))
 {
-return match_helper(str + 1, pattern + 1);
+return (match_helper(str + 1, pattern + 1));
 }
 return (0);
 }
@@ -62,8 +62,8 @@ int regex_match(char const *str, char const *pattern)
 {
 if (!str || !pattern)
 {
-return (0); 
+return (0);
 }
 
-return match_helper(str, pattern);
+return (match_helper(str, pattern));
 }
