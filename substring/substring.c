@@ -69,7 +69,7 @@ static int is_valid_concatenation(char const *s, char const **words,
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
   int s_len, word_len, total_len;
-  int i, j, capacity = 10;
+  int i, capacity = 10;
   int *indices, *temp;
 
   *n = 0;
