@@ -7,8 +7,8 @@
  */
 size_t get_tree_size(const binary_tree_t *tree)
 {
-  if (!tree)
-    return (0);
+if (!tree)
+return (0);
 
   return (1 + get_tree_size(tree->left) + get_tree_size(tree->right));
 }
@@ -21,29 +21,29 @@ size_t get_tree_size(const binary_tree_t *tree)
  */
 heap_t *get_last_node(heap_t *root, size_t size)
 {
-  heap_t *node = NULL;
-  size_t mask;
+heap_t *node = NULL;
+size_t mask;
 
-  if (!root || size == 0)
-    return (NULL);
+if (!root || size == 0)
+return (NULL);
 
   /* Create a bit mask to navigate to the last node */
-  for (mask = 1; mask <= size; mask <<= 1)
-    ;
-  mask >>= 2;
+for (mask = 1; mask <= size; mask <<= 1)
+;
+mask >>= 2;
 
   /* Navigate to the last node using the bit mask */
-  node = root;
-  while (mask > 0)
-  {
-    if (size & mask)
-      node = node->right;
-    else
-      node = node->left;
-    mask >>= 1;
-  }
+node = root;
+while (mask > 0)
+{
+if (size & mask)
+node = node->right;
+else
+node = node->left;
+mask >>= 1;
+}
 
-  return (node);
+return (node);
 }
 
 /**
@@ -52,29 +52,29 @@ heap_t *get_last_node(heap_t *root, size_t size)
  */
 void heapify_down(heap_t *root)
 {
-  heap_t *node = root, *largest_child = NULL;
-  int tmp;
+heap_t *node = root, *largest_child = NULL;
+int tmp;
 
-  while (1)
-  {
-    if (!node->left)
-      break;
+while (1)
+{
+if (!node->left)
+break;
 
-    if (!node->right)
-      largest_child = node->left;
-    else
-      largest_child = (node->left->n > node->right->n) ? node->left : node->right;
+if (!node->right)
+largest_child = node->left;
+else
+largest_child = (node->left->n > node->right->n) ? node->left : node->right;
 
-    if (node->n >= largest_child->n)
-      break;
+if (node->n >= largest_child->n)
+break;
 
     /* Swap values */
-    tmp = node->n;
-    node->n = largest_child->n;
-    largest_child->n = tmp;
+tmp = node->n;
+node->n = largest_child->n;
+largest_child->n = tmp;
 
-    node = largest_child;
-  }
+node = largest_child;
+}
 }
 
 /**
@@ -84,45 +84,45 @@ void heapify_down(heap_t *root)
  */
 int heap_extract(heap_t **root)
 {
-  int value;
-  size_t size;
-  heap_t *last_node = NULL;
+int value;
+size_t size;
+heap_t *last_node = NULL;
 
-  if (!root || !*root)
-    return (0);
+if (!root || !*root)
+return (0);
 
   /* Get the value to return */
-  value = (*root)->n;
+value = (*root)->n;
 
   /* Get the size of the heap */
-  size = get_tree_size(*root);
+size = get_tree_size(*root);
 
   /* Handle the case of a single node */
-  if (size == 1)
-  {
-    free(*root);
-    *root = NULL;
-    return (value);
-  }
+if (size == 1)
+{
+free(*root);
+*root = NULL;
+return (value);
+}
 
   /* Find the last level-order node */
-  last_node = get_last_node(*root, size);
-  if (!last_node)
-    return (0);
+last_node = get_last_node(*root, size);
+if (!last_node)
+return (0);
 
   /* Move the last node's value to the root */
-  (*root)->n = last_node->n;
+(*root)->n = last_node->n;
 
   /* Remove the last node from its parent */
-  if (last_node->parent->left == last_node)
-    last_node->parent->left = NULL;
-  else
-    last_node->parent->right = NULL;
+if (last_node->parent->left == last_node)
+last_node->parent->left = NULL;
+else
+last_node->parent->right = NULL;
 
-  free(last_node);
+free(last_node);
 
   /* Restore the heap property */
-  heapify_down(*root);
+heapify_down(*root);
 
-  return (value);
+return (value);
 }
