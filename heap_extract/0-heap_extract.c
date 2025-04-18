@@ -10,7 +10,7 @@ size_t get_tree_size(const binary_tree_t *tree)
 if (!tree)
 return (0);
 
-  return (1 + get_tree_size(tree->left) + get_tree_size(tree->right));
+return (1 + get_tree_size(tree->left) + get_tree_size(tree->right));
 }
 
 /**
@@ -118,11 +118,8 @@ if (last_node->parent->left == last_node)
 last_node->parent->left = NULL;
 else
 last_node->parent->right = NULL;
-
 free(last_node);
-
   /* Restore the heap property */
 heapify_down(*root);
-
 return (value);
 }
