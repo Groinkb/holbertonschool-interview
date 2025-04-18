@@ -106,8 +106,8 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
   if (*n == 0)
   {
     free(indices);
-    return (NULL);
-  }
+  return (NULL);
+}
 
-  return (indices);
+return (indices);
 }
