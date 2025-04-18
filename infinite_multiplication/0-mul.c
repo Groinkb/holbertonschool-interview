@@ -34,7 +34,6 @@ i++;
 }
 return (1);
 }
-
 /**
  * error_exit - Prints error message and exits with status 98
  */
@@ -84,11 +83,9 @@ int main(int argc, char *argv[])
 char *num1, *num2;
 int len1, len2, len_result, i, j, digit1, digit2, carry, product;
 int *result;
-
   /* Check number of arguments */
 if (argc != 3)
 error_exit();
-
 num1 = argv[1];
 num2 = argv[2];
   /* Check if arguments contain only digits */
