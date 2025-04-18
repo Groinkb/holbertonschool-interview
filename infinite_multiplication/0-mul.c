@@ -110,7 +110,7 @@ digit1 = num1[i] - '0';
 for (j = len2 - 1; j >= 0; j--)
 {
 digit2 = num2[j] - '0';
-product = (digit1 *digit2)+ result[i + j + 1]+ carry;
+product = (digit1 *digit2) + result[i + j + 1] + carry;
 carry = product / 10;
 result[i + j + 1] = product % 10;
 }
